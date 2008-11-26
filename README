@@ -1,0 +1,19 @@
+Library Req:
+
+You need xosd library and devel packages.
+> urpmi lib64xosd2-devel lib64xosd2
+
+Compilation:
+
+Run 'make'. It should create an executable called 'getkey'.
+
+Instructions for running:
+
+Launch getkey
+> ./getkey
+
+The first key you press will be used as your quit key (I prefer Esc).
+
+After that any key you press will be displayed on the top of the screen in the center.
+
+
