@@ -13,7 +13,6 @@
 #include <X11/extensions/record.h>
 #include <xosd.h>
 #include "getkey.h"
-//#include "keycode.h"
 unsigned int QuitKey;
 Bool HasQuitKey;
 
