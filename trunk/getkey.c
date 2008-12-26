@@ -13,14 +13,119 @@
 #include <X11/extensions/record.h>
 #include <xosd.h>
 #include "getkey.h"
+#include "list.h"
+
 unsigned int QuitKey;
 Bool HasQuitKey;
 
-typedef struct
+void initialize_keyCode()
 {
-	Display* local_dpy;
-	Bool doit;
-}x_state;
+	strcpy(keyCode[9] ,  "Esc");
+	strcpy(keyCode[67] ,  "F1");
+	strcpy(keyCode[68] ,  "F2");
+	strcpy(keyCode[69] ,  "F3");
+	strcpy(keyCode[70] ,  "F4");
+	strcpy(keyCode[71] ,  "F5");
+	strcpy(keyCode[72] ,  "F6");
+	strcpy(keyCode[73] ,  "F7");
+	strcpy(keyCode[74] ,  "F8");
+	strcpy(keyCode[75] ,  "F9");
+	strcpy(keyCode[76] ,  "F10");
+	strcpy(keyCode[95] ,  "F11");
+	strcpy(keyCode[96] ,  "F12");
+	strcpy(keyCode[111] ,  "PrtScn");
+	strcpy(keyCode[78] ,  "Scr Lk");
+	strcpy(keyCode[110] ,  "Pause");
+	strcpy(keyCode[49] ,  "`");
+	strcpy(keyCode[10] ,  "1");
+	strcpy(keyCode[11] ,  "2");
+	strcpy(keyCode[12] ,  "3");
+	strcpy(keyCode[13] ,  "4");
+	strcpy(keyCode[14] ,  "5");
+	strcpy(keyCode[15] ,  "6");
+	strcpy(keyCode[16] ,  "7");
+	strcpy(keyCode[17] ,  "8");
+	strcpy(keyCode[18] ,  "9");
+	strcpy(keyCode[19] ,  "0");
+	strcpy(keyCode[20] ,  "-");
+	strcpy(keyCode[21] ,  "=");
+	strcpy(keyCode[22] ,  "BkSpc");
+	strcpy(keyCode[23] ,  "Tab");
+	strcpy(keyCode[24] ,  "q");
+	strcpy(keyCode[25] ,  "w");
+	strcpy(keyCode[26] ,  "e");
+	strcpy(keyCode[27] ,  "r");
+	strcpy(keyCode[28] ,  "t");
+	strcpy(keyCode[29] ,  "y");
+	strcpy(keyCode[30] ,  "u");
+	strcpy(keyCode[31] ,  "i");
+	strcpy(keyCode[32] ,  "o");
+	strcpy(keyCode[33] ,  "p");
+	strcpy(keyCode[34] ,  "[");
+	strcpy(keyCode[35] ,  "]");
+	strcpy(keyCode[51] ,  "\\");
+	strcpy(keyCode[66] ,  "Caps Lock");
+	strcpy(keyCode[38] ,  "a");
+	strcpy(keyCode[39] ,  "s");
+	strcpy(keyCode[40] ,  "d");
+	strcpy(keyCode[41] ,  "f");
+	strcpy(keyCode[42] ,  "g");
+	strcpy(keyCode[43] ,  "h");
+	strcpy(keyCode[44] ,  "j");
+	strcpy(keyCode[45] ,  "k");
+	strcpy(keyCode[46] ,  "l");
+	strcpy(keyCode[47] ,  ";");
+	strcpy(keyCode[48] ,  "'");
+	strcpy(keyCode[36] ,  "Enter");
+	strcpy(keyCode[50] ,  "L-Shift");
+	strcpy(keyCode[52] ,  "z");
+	strcpy(keyCode[53] ,  "x");
+	strcpy(keyCode[54] ,  "c");
+	strcpy(keyCode[55] ,  "v");
+	strcpy(keyCode[56] ,  "b");
+	strcpy(keyCode[57] ,  "n");
+	strcpy(keyCode[58] ,  "m");
+	strcpy(keyCode[59] ,  ",");
+	strcpy(keyCode[60] ,  ".");
+	strcpy(keyCode[61] ,  "/");
+	strcpy(keyCode[62] ,  "R-Shift");
+	strcpy(keyCode[37] ,  "L-Ctrl");
+	strcpy(keyCode[115] ,  "L-Win");
+	strcpy(keyCode[64] ,  "L-Alt");
+	strcpy(keyCode[65] ,  "Spc");
+	strcpy(keyCode[113] ,  "R-Alt");
+	strcpy(keyCode[116] ,  "R-Win");
+	strcpy(keyCode[117] ,  "R-Menu");
+	strcpy(keyCode[109] ,  "R-Ctrl");
+	strcpy(keyCode[106] ,  "Insert");
+	strcpy(keyCode[97] ,  "Home");
+	strcpy(keyCode[99] ,  "PgUp");
+	strcpy(keyCode[107] ,  "Del");
+	strcpy(keyCode[103] ,  "End");
+	strcpy(keyCode[105] ,  "PgDn");
+	strcpy(keyCode[98] ,  "Up");
+	strcpy(keyCode[100] ,  "Left");
+	strcpy(keyCode[104] ,  "Down");
+	strcpy(keyCode[102] ,  "Right");
+	strcpy(keyCode[77] ,  "NumLock");
+	strcpy(keyCode[112] , "/ (KP)");
+	strcpy(keyCode[63] ,  "* (KP)");
+	strcpy(keyCode[82] ,  "- (KP)");
+	strcpy(keyCode[79] ,  "7 (KP)");
+	strcpy(keyCode[80] ,  "8 (KP)");
+	strcpy(keyCode[81] ,  "9 (KP)");
+	strcpy(keyCode[86] ,  "+ (KP)");
+	strcpy(keyCode[83] ,  "4 (KP)");
+	strcpy(keyCode[84] ,  "5 (KP)");
+	strcpy(keyCode[85] ,  "6 (KP)");
+	strcpy(keyCode[87] ,  "1 (KP)");
+	strcpy(keyCode[88] ,  "2 (KP)");
+	strcpy(keyCode[89] ,  "3 (KP)");
+	strcpy(keyCode[108] ,  "Enter (KP)");
+	strcpy(keyCode[90] ,  "0  (KP)");
+	strcpy(keyCode[91] ,  ".  (KP)"); 
+} 
+
 
 int findQuitKey(Display *Dpy, int Screen)
 {
@@ -80,134 +185,91 @@ void display_osd(char *display_string)
 	osd = xosd_create (1);
 	xosd_set_font(osd, "-adobe-courier-medium-r-normal--34-240-100-100-m-200-iso8859-1");
 	xosd_set_colour(osd, "LawnGreen");
-	xosd_set_timeout(osd, 1);
+	xosd_set_timeout(osd, 0);
 	xosd_set_shadow_offset(osd, 1);
 	xosd_set_pos(osd,XOSD_top);
 	xosd_set_align(osd,XOSD_center);
 	xosd_display (osd, 0, XOSD_string, display_string);
 }
 
-typedef struct
+void printList(Display *local_dpy, list_node_int** key_list, int new_key)
 {
-	struct list_node* prev;
-	struct list_node* next;
-	unsigned int key;
-}list_node;
-
-typedef struct list
-{
-	list_node* first_node;
-	list_node* last_node;
-}list;
-
-
-void insertAfter(list* key_list, list_node* node, list_node* new_node)
-{
-	new_node->prev = node;
-	new_node->next = node->next;
-	if (node->next == NULL)
-		key_list->last_node = new_node;
-	else
-		((list_node*)(node->next))->prev = new_node;
-	node->next = new_node;
-}
-
-void insertBefore(list* key_list, list_node* node, list_node* new_node)
-{
-	new_node->prev = node->prev;
-	new_node->next = node;
-	if (node->prev == NULL)
-		key_list->first_node = new_node;
-	else
-		((list_node*)(node->prev))->next = new_node;
-	node->prev = new_node;
-
-}
-
-void insertBeginning(list* key_list, unsigned int key)
-{
-	list_node *new_node = (list_node*)malloc(sizeof(list_node));
-	new_node->key = key;
-	if(key_list->first_node == NULL)
-	{
-		key_list->first_node = new_node;
-		key_list->last_node = new_node;
-		new_node->prev = NULL;
-		new_node->next = NULL;
-	}
-	else
-		insertBefore(key_list, key_list->first_node, new_node);
-}
-
-void insertEnd(list* key_list, unsigned int key)
-{
-	if(key_list->first_node == NULL)
-		insertBeginning(key_list, key);
-	else
-	{
-		list_node *new_node = malloc(sizeof(list_node));
-		new_node->key = key;
-		insertAfter(key_list, key_list->first_node, new_node);
-	}
-}
-void removeNode(list* key_list, list_node *node)
-{
-	if (node->next == NULL)// last node
-	{
-		key_list->last_node = node->prev;
-		if(node->prev)
-			((list_node*)(node->prev))->next = NULL;
-	}
-	else
-		((list_node*)(node->next))->prev = node->prev;
-	if (node->prev == NULL) // first node
-	{
-		key_list->first_node = node->next;
-		if(node->next)
-			((list_node*)(node->next))->prev = NULL;
-	}
-	else
-		((list_node*)(node->prev))->next = node->next;
-	free(node);
-}
-void removeKey(list* key_list, unsigned int key)
-{
-	list_node* node = key_list->last_node;
-	while(node) // loop until head of list
-	{
-		if(node->key == key)
-		{
-			removeNode(key_list, node);
-			break;
-		}
-		node = node->prev;
-	}
-}
-
-void printList(Display *local_dpy, list* key_list)
-{
-	Bool first_time = true;
-	list_node *node = key_list->first_node;
-	char buf[1024];
+	//Bool first_time = true;
+	list_node_int *node = *key_list, *head = *key_list;
+	char buf[1024], str_buf[2048];
 	int len=0;
-	while(node)
-	{
-		if(first_time)
-		{
-			len = sprintf(buf,"%s",XKeysymToString(XKeycodeToKeysym(local_dpy,node->key,0)));
-			display_osd(buf);
-			first_time =false;
-		}
-		else
-		{
-			len += sprintf(buf+len,"+%s",XKeysymToString(XKeycodeToKeysym(local_dpy,node->key,0)));
-			display_osd(buf);
-		}
-		node = node->next;
-	}
-}
+	list_node_int* new_key_node;
+	static list_node_str* key_str = NULL;
+	list_node_str* str_node, *str_head;
+	list_node_str* new_node=NULL;
+	static int key_str_len = 0;
+	char* new_key_str;
 
-struct list *g_key_list;
+	do
+	{
+		if(node) // Make sure node is not null
+		{
+			node = node->prev;
+			len += sprintf(buf+len, "%s+", keyCode[node->key]);
+		}
+	}while(node != head); // Traverse the linked list in the reverse order
+
+	switch(new_key)
+	{
+		case 37:   // L-Ctrl
+		case 109:  // R-Ctrl
+		case 115:  // L-Win
+		case 116:  // R-Win
+		case 64:   // L-Alt
+		case 50:   // L-Shift
+		case 62:   // R-Shift 
+			if(!(new_key_node = (list_node_int*)malloc(sizeof(list_node_int)) ) )
+			{
+				printf("Out of Memory!!");
+				exit(1);
+			}
+			new_key_node->prev = NULL;
+			new_key_node->prev = NULL;
+			new_key_node->key = new_key;
+			add_node_int(key_list, new_key_node);
+			break;
+		default:
+			break;
+	}
+	len += sprintf(buf+len,"%s",keyCode[new_key]);
+
+	if(!(new_key_str = (char*)malloc(sizeof(char) * (strlen(buf) +1) ) ))
+	{
+		printf("Out of Memory!!");
+		exit(1);
+	}
+	strcpy(new_key_str, buf);
+
+	if(!(new_node = (list_node_str*)malloc(sizeof(list_node_str))))
+	{
+		printf("Out of Memory!!");
+		exit(1);
+	}
+	
+	new_node->str = new_key_str;
+
+	add_node_str(&key_str, new_node);
+	key_str_len++;
+	if(key_str_len > 3)
+	{
+		key_str_len--;
+		delete_node_str(&key_str, key_str->prev);
+	}
+	str_node = key_str; 
+	str_head = key_str; 
+	len = 0;
+	do
+	{
+		str_node = str_node->prev;
+		len += sprintf(str_buf+len, "%s ",str_node->str);
+	}while(str_node != str_head);
+	display_osd(str_buf);
+}
 
 void eventCallback (XPointer x_data, XRecordInterceptData * d)
 {
@@ -215,14 +277,7 @@ void eventCallback (XPointer x_data, XRecordInterceptData * d)
 	unsigned char *ud1;
 	unsigned int type, cur_key;
 	unsigned char type1, detail1;
-	static Bool first_time = true;
-	if(first_time)
-	{
-		first_time = false;
-		g_key_list = (struct list*)malloc(sizeof(list));
-		g_key_list->first_node = NULL;
-		g_key_list->last_node = NULL;
-	}
+	static list_node_int *keylist = NULL;
 
 	if (d->category != XRecordFromServer || data->doit == 0)
 	{
@@ -241,6 +296,11 @@ void eventCallback (XPointer x_data, XRecordInterceptData * d)
 	/* what did we get? */
 	switch (type)
 	{
+		case KeyRelease:
+			/* a key was released */
+			//printList(data->local_dpy,keylist);
+			delete_node_int(&keylist, search_node_int(keylist, cur_key));
+			break;
 		case KeyPress:
 			/* a key was pressed */
 			/* should we stop looping, i.e. did the user press the quitkey? */
@@ -251,14 +311,15 @@ void eventCallback (XPointer x_data, XRecordInterceptData * d)
 			}
 			else
 			{
-				insertEnd(g_key_list, cur_key);
+				/*--------------------------------------------------
+				* new_node = (list_node_int*)malloc(sizeof(list_node_int));
+				* new_node->prev = NULL;
+				* new_node->next = NULL;
+				* new_node->key = cur_key;
+				* add_node_int(&keylist, new_node);
+				*--------------------------------------------------*/
+				printList(data->local_dpy,&keylist, cur_key);
 			}
-			printList(data->local_dpy,g_key_list);
-			break;
-
-		case KeyRelease:
-			/* a key was released */
-			removeKey(g_key_list, cur_key);
 			break;
 	}
 	XRecordFreeData (d);
@@ -320,9 +381,10 @@ int main()
 	if(!LocalDisplay || !RecDisplay)
 	{
 		fprintf(stderr, "Could not open local display\n");
+		exit(EXIT_FAILURE);
 	}
 	int LocalScreen = DefaultScreen (LocalDisplay);
-	//initialize_keyCode();
+	initialize_keyCode();
 	printf("Press a key to be used as quit key\n");
 	QuitKey = findQuitKey(LocalDisplay, LocalScreen);
 	HasQuitKey = true;
