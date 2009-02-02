@@ -26,7 +26,7 @@ void add_node_int(list_node_int **head, list_node_int *a_node)
 // deletes the incoming node and updates the head node if necessary
 void delete_node_int(list_node_int **head, list_node_int *d_node)
 {
-	if(!d_node) // if incoming node is NULL then return
+	if( (!d_node) ) // if incoming node is NULL then return
 		return;
 
 	if( (d_node == d_node->next) && (d_node == d_node->prev) ) // If d_node is the only node in the list
@@ -44,6 +44,7 @@ void delete_node_int(list_node_int **head, list_node_int *d_node)
 	free(d_node);
 	return;
 }
+
 
 // Searches through the link list to find the node that matches the key and returns the node
 list_node_int* search_node_int(list_node_int *head, unsigned int key)
@@ -139,7 +140,22 @@ list_node_str* search_node_str(list_node_str *head, char* key)
 	return NULL; 				  // Return NULL if key is not found
 }
 
-// Go through the list and print every key in the node
+void clear_list_str(list_node_str **head)
+{
+	list_node_str *node = *head;
+	if(!(*head)) // Make sure it ain't pointing to null
+		return;
+	do 
+	{
+		if(node) // Make sure node is not null
+		{
+			node = node->prev;
+			delete_node_str(head, node);
+		}
+	}while(*head); // Traverse the linked list in the reverse order
+}
+
+// Go through the list and print every key in the node. This is for debug purposes only.
 void print_list_str(list_node_str *head)
 {
 	int i = 0;
