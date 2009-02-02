@@ -1,5 +1,5 @@
-#ifndef __getkey_h__
-#define __getkey_h__
+#ifndef __screenkey_h__
+#define __screenkey_h__
 
 /* Define True and false */
 #ifndef false
@@ -19,5 +19,7 @@ typedef struct
 	Display* local_dpy;
 	Bool doit;
 }x_state;
+
+
 
 #endif

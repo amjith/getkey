@@ -17,6 +17,72 @@
 
 unsigned int QuitKey;
 Bool HasQuitKey;
+unsigned int Len=3;
+
+void usage(const int exitCode)
+{
+	fprintf (stderr, "%s %s\n", PROG, VERSION);
+	fprintf(stderr, "Usage: %s [option]\n",PROG );
+	fprintf (stderr, "Options:\n");
+	fprintf (stderr,
+			"  -l  NUM. Number of keys to display. Default: 3\n"\
+			"      Set this to -1 for unlimited length. \n"\
+			"  -v  show version. \n"\
+			"  -h  this help. \n"\
+			);
+	exit(exitCode);
+}
+
+void version()
+{
+	fprintf(stderr, "%s %s\n", PROG, VERSION);
+	exit(EXIT_SUCCESS);
+}
+
+void parseCommand(int argc, char *argv[])
+{
+	int index = 1;
+	while (index < argc)
+	{
+		/* is this '-v'? */
+		if ( ( 0 == strcmp (argv[index], "--version") ) || ( 0 == strcmp (argv[index], "-v") ) )
+		{
+			version();
+		}
+		/* is this '-h'? */
+		if ( ( 0 == strcmp(argv[index], "--help") ) ||  ( 0 == strcmp(argv[index], "-h") ) )
+		{
+			usage(EXIT_SUCCESS);
+		}
+		if ( 0 == strcmp(argv[index], "-l") )
+		{
+			if ( (argc <= index + 1) || (sscanf (argv[index+1], "%u", &Len) != 1) )
+			{
+				// Check if valid integer
+				fprintf (stderr, "Invalid parameter for '-l'.\n");
+				usage (EXIT_FAILURE);
+			}
+			index++;
+		}
+		else if( 0 == strcmp(argv[index], "-q") )
+		{
+			if ( (argc <= index + 1) || (sscanf (argv[index+1], "%u", &QuitKey) != 1) )
+			{
+				// Check if valid integer
+				fprintf (stderr, "Invalid parameter for '-q'.\n");
+				usage (EXIT_FAILURE);
+			}
+			HasQuitKey = true;
+			index++;
+		}
+		else
+		{
+			fprintf(stderr, "Invalid option '%s'\n",argv[index]);
+			usage(EXIT_FAILURE);
+		}
+		index++;
+	}
+}
 
 void initialize_keyCode()
 {
@@ -34,7 +100,7 @@ void initialize_keyCode()
 	strcpy(keyCode[95] ,  "F11");
 	strcpy(keyCode[96] ,  "F12");
 	strcpy(keyCode[111] ,  "PrtScn");
-	strcpy(keyCode[78] ,  "Scr Lk");
+	strcpy(keyCode[78] ,  "ScrLk");
 	strcpy(keyCode[110] ,  "Pause");
 	strcpy(keyCode[49] ,  "`");
 	strcpy(keyCode[10] ,  "1");
@@ -64,7 +130,7 @@ void initialize_keyCode()
 	strcpy(keyCode[34] ,  "[");
 	strcpy(keyCode[35] ,  "]");
 	strcpy(keyCode[51] ,  "\\");
-	strcpy(keyCode[66] ,  "Caps Lock");
+	strcpy(keyCode[66] ,  "CapsLk");
 	strcpy(keyCode[38] ,  "a");
 	strcpy(keyCode[39] ,  "s");
 	strcpy(keyCode[40] ,  "d");
@@ -77,7 +143,7 @@ void initialize_keyCode()
 	strcpy(keyCode[47] ,  ";");
 	strcpy(keyCode[48] ,  "'");
 	strcpy(keyCode[36] ,  "Enter");
-	strcpy(keyCode[50] ,  "L-Shift");
+	strcpy(keyCode[50] ,  "Shift");        // Left Shift
 	strcpy(keyCode[52] ,  "z");
 	strcpy(keyCode[53] ,  "x");
 	strcpy(keyCode[54] ,  "c");
@@ -88,15 +154,15 @@ void initialize_keyCode()
 	strcpy(keyCode[59] ,  ",");
 	strcpy(keyCode[60] ,  ".");
 	strcpy(keyCode[61] ,  "/");
-	strcpy(keyCode[62] ,  "R-Shift");
-	strcpy(keyCode[37] ,  "L-Ctrl");
-	strcpy(keyCode[115] ,  "L-Win");
-	strcpy(keyCode[64] ,  "L-Alt");
+	strcpy(keyCode[62] ,  "Shift");       // Right Shift
+	strcpy(keyCode[37] ,  "Ctrl");        // Left Ctrl
+	strcpy(keyCode[115] , "Win");	      // Left Windows key
+	strcpy(keyCode[64] ,  "Alt");	      // Left Alt key
 	strcpy(keyCode[65] ,  "Spc");
-	strcpy(keyCode[113] ,  "R-Alt");
-	strcpy(keyCode[116] ,  "R-Win");
-	strcpy(keyCode[117] ,  "R-Menu");
-	strcpy(keyCode[109] ,  "R-Ctrl");
+	strcpy(keyCode[113] ,  "Alt");        // Right
+	strcpy(keyCode[116] ,  "Win");        // Right Windows key
+	strcpy(keyCode[117] ,  "Menu");
+	strcpy(keyCode[109] ,  "Ctrl");       // Right Ctrl
 	strcpy(keyCode[106] ,  "Insert");
 	strcpy(keyCode[97] ,  "Home");
 	strcpy(keyCode[99] ,  "PgUp");
@@ -204,8 +270,10 @@ void printList(Display *local_dpy, list_node_int** key_list, int new_key)
 	list_node_str* new_node=NULL;
 	static int key_str_len = 0;
 	char* new_key_str;
+	int persist = false; // if the new key is just another special key, don't add it to the str list, just print it once.
 
-	do
+	// Create a new str buf with the existing list (The list will have only special keys)
+	do 
 	{
 		if(node) // Make sure node is not null
 		{
@@ -214,15 +282,16 @@ void printList(Display *local_dpy, list_node_int** key_list, int new_key)
 		}
 	}while(node != head); // Traverse the linked list in the reverse order
 
+	// If incoming key is special key add it to list.
 	switch(new_key)
 	{
 		case 37:   // L-Ctrl
+		case 50:   // L-Shift
+		case 62:   // R-Shift 
+		case 64:   // L-Alt
 		case 109:  // R-Ctrl
 		case 115:  // L-Win
 		case 116:  // R-Win
-		case 64:   // L-Alt
-		case 50:   // L-Shift
-		case 62:   // R-Shift 
 			if(!(new_key_node = (list_node_int*)malloc(sizeof(list_node_int)) ) )
 			{
 				printf("Out of Memory!!");
@@ -234,15 +303,18 @@ void printList(Display *local_dpy, list_node_int** key_list, int new_key)
 			add_node_int(key_list, new_key_node);
 			break;
 		default:
+			persist = true; // Add it to str list only if the new key is a regular key.
 			break;
 	}
-	len += sprintf(buf+len,"%s",keyCode[new_key]);
+
+	len += sprintf(buf+len,"%s",keyCode[new_key]);  // Add the new key to the str_buf.
 
 	if(!(new_key_str = (char*)malloc(sizeof(char) * (strlen(buf) +1) ) ))
 	{
 		printf("Out of Memory!!");
 		exit(1);
 	}
+
 	strcpy(new_key_str, buf);
 
 	if(!(new_node = (list_node_str*)malloc(sizeof(list_node_str))))
@@ -250,12 +322,13 @@ void printList(Display *local_dpy, list_node_int** key_list, int new_key)
 		printf("Out of Memory!!");
 		exit(1);
 	}
-	
+
 	new_node->str = new_key_str;
 
 	add_node_str(&key_str, new_node);
 	key_str_len++;
-	if(key_str_len > 3)
+	// After key_str_len reaches Len start removing keys from the list
+	if(key_str_len > Len)
 	{
 		key_str_len--;
 		delete_node_str(&key_str, key_str->prev);
@@ -269,6 +342,20 @@ void printList(Display *local_dpy, list_node_int** key_list, int new_key)
 		len += sprintf(str_buf+len, "%s ",str_node->str);
 	}while(str_node != str_head);
 	display_osd(str_buf);
+
+	// Ugly hack: Take out the new_node since persist is false.
+	// Best method is to not add it to the str_list at all.
+	if(!persist)
+	{
+		key_str_len--;
+		delete_node_str(&key_str, new_node);
+	}
+	if(new_key == 36 )	// 36 is for enter, using it as a delimiter.
+	{
+		clear_list_str(&key_str);
+		key_str_len = 0;
+	}
+
 }
 
 void eventCallback (XPointer x_data, XRecordInterceptData * d)
@@ -374,7 +461,7 @@ void eventLoop (Display * LocalDpy, int LocalScreen, Display * RecDpy, unsigned 
 	XFree (rr);
 }
 
-int main()
+int main(int argc, char *argv[])
 {
 	Display *LocalDisplay = XOpenDisplay (NULL);
 	Display *RecDisplay = XOpenDisplay (NULL);
@@ -384,10 +471,16 @@ int main()
 		exit(EXIT_FAILURE);
 	}
 	int LocalScreen = DefaultScreen (LocalDisplay);
+
+	parseCommand(argc, argv);
+
 	initialize_keyCode();
 	printf("Press a key to be used as quit key\n");
-	QuitKey = findQuitKey(LocalDisplay, LocalScreen);
-	HasQuitKey = true;
+	if (false == HasQuitKey)
+	{
+		QuitKey = findQuitKey(LocalDisplay, LocalScreen);
+		HasQuitKey = true;
+	}
 
 	printf(XKeysymToString(XKeycodeToKeysym(LocalDisplay, QuitKey,0)));
 	

@@ -24,4 +24,5 @@ void add_node_str(list_node_str **head, list_node_str *a_node);
 void delete_node_str(list_node_str **head, list_node_str *d_node);
 list_node_str* search_node_str(list_node_str *head, char* str);
 void print_list_str(list_node_str *head);
+void clear_list_str(list_node_str **head);
 #endif
