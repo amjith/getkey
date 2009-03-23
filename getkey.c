@@ -17,16 +17,20 @@
 
 unsigned int QuitKey;
 Bool HasQuitKey;
-unsigned int Len=3;
+unsigned int Len=3, XosdTimeout = 0;
+
 
 void usage(const int exitCode)
 {
 	fprintf (stderr, "%s %s\n", PROG, VERSION);
-	fprintf(stderr, "Usage: %s [option]\n",PROG );
+	fprintf (stderr, "Usage: %s [option]\n",PROG );
 	fprintf (stderr, "Options:\n");
 	fprintf (stderr,
 			"  -l  NUM. Number of keys to display. Default: 3\n"\
 			"      Set this to -1 for unlimited length. \n"\
+			"  -t  NUM. Number of seconds to display the OSD. Default: 0\n"
+			"      Set this number to 0 to stick the OSD always.\n"
+			"  -q  NUM. Specify the key code for the quit key.\n"
 			"  -v  show version. \n"\
 			"  -h  this help. \n"\
 			);
@@ -60,6 +64,16 @@ void parseCommand(int argc, char *argv[])
 			{
 				// Check if valid integer
 				fprintf (stderr, "Invalid parameter for '-l'.\n");
+				usage (EXIT_FAILURE);
+			}
+			index++;
+		}
+		else if( 0 == strcmp(argv[index], "-t") )
+		{
+			if ( (argc <= index + 1) || (sscanf (argv[index+1], "%u", &XosdTimeout) != 1) )
+			{
+				// Check if valid integer
+				fprintf (stderr, "Invalid parameter for '-t'.\n");
 				usage (EXIT_FAILURE);
 			}
 			index++;
@@ -251,7 +265,7 @@ void display_osd(char *display_string)
 	osd = xosd_create (1);
 	xosd_set_font(osd, "-adobe-courier-medium-r-normal--34-240-100-100-m-200-iso8859-1");
 	xosd_set_colour(osd, "LawnGreen");
-	xosd_set_timeout(osd, 0);
+	xosd_set_timeout(osd, XosdTimeout);
 	xosd_set_shadow_offset(osd, 1);
 	xosd_set_pos(osd,XOSD_top);
 	xosd_set_align(osd,XOSD_center);
@@ -475,14 +489,16 @@ int main(int argc, char *argv[])
 	parseCommand(argc, argv);
 
 	initialize_keyCode();
-	printf("Press a key to be used as quit key\n");
 	if (false == HasQuitKey)
 	{
+		printf("Press a key to be used as quit key\n");
 		QuitKey = findQuitKey(LocalDisplay, LocalScreen);
 		HasQuitKey = true;
 	}
 
-	printf(XKeysymToString(XKeycodeToKeysym(LocalDisplay, QuitKey,0)));
+	//fprintf(stderr, XKeysymToString(XKeycodeToKeysym(LocalDisplay, QuitKey,0)));
+	fprintf(stderr, "QuitKey: %s(%d)\n", XKeysymToString(XKeycodeToKeysym(LocalDisplay, QuitKey,0)), QuitKey);
+	//printf("QuitKey:%d\n",QuitKey);
 	
 	/* start the main event loop */
 	eventLoop (LocalDisplay, LocalScreen, RecDisplay, QuitKey);
