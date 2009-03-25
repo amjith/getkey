@@ -142,16 +142,11 @@ list_node_str* search_node_str(list_node_str *head, char* key)
 
 void clear_list_str(list_node_str **head)
 {
-	list_node_str *node = *head;
 	if(!(*head)) // Make sure it ain't pointing to null
 		return;
 	do 
 	{
-		if(node) // Make sure node is not null
-		{
-			node = node->prev;
-			delete_node_str(head, node);
-		}
+		delete_node_str(head, (*head)->prev);
 	}while(*head); // Traverse the linked list in the reverse order
 }
 
