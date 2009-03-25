@@ -18,6 +18,7 @@
 unsigned int QuitKey;
 Bool HasQuitKey;
 unsigned int Len=3, XosdTimeout = 0;
+unsigned int delimiter[] = {9, 36, 65, -1};
 
 
 void usage(const int exitCode)
@@ -70,9 +71,9 @@ void parseCommand(int argc, char *argv[])
 		}
 		else if( 0 == strcmp(argv[index], "-t") )
 		{
+			// Check if valid integer
 			if ( (argc <= index + 1) || (sscanf (argv[index+1], "%u", &XosdTimeout) != 1) )
 			{
-				// Check if valid integer
 				fprintf (stderr, "Invalid parameter for '-t'.\n");
 				usage (EXIT_FAILURE);
 			}
@@ -285,6 +286,7 @@ void printList(Display *local_dpy, list_node_int** key_list, int new_key)
 	static int key_str_len = 0;
 	char* new_key_str;
 	int persist = false; // if the new key is just another special key, don't add it to the str list, just print it once.
+	int i = 0;
 
 	// Create a new str buf with the existing list (The list will have only special keys)
 	do 
@@ -364,10 +366,16 @@ void printList(Display *local_dpy, list_node_int** key_list, int new_key)
 		key_str_len--;
 		delete_node_str(&key_str, new_node);
 	}
-	if(new_key == 36 )	// 36 is for enter, using it as a delimiter.
+
+	while(delimiter[i]!=-1)
 	{
-		clear_list_str(&key_str);
-		key_str_len = 0;
+		if(delimiter[i] == new_key)	// delimiter key
+		{
+			clear_list_str(&key_str);
+			key_str_len = 0;
+			break;
+		}
+		i++;
 	}
 
 }
