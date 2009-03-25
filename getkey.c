@@ -16,7 +16,8 @@
 #include "list.h"
 
 unsigned int QuitKey;
-Bool HasQuitKey;
+Bool HasQuitKey = false;
+Bool EnableDelimiters = false;
 unsigned int Len=3, XosdTimeout = 0;
 unsigned int delimiter[] = {9, 36, 65, -1};
 
@@ -31,6 +32,8 @@ void usage(const int exitCode)
 			"      Set this to -1 for unlimited length. \n"\
 			"  -t  NUM. Number of seconds to display the OSD. Default: 0\n"
 			"      Set this number to 0 to stick the OSD always.\n"
+			"  -d  Enable delimiters. Delimiters are special keys that will clear the current keylist history.\n"
+		    "      Default: Enter, Esc, Space\n"
 			"  -q  NUM. Specify the key code for the quit key.\n"
 			"  -v  show version. \n"\
 			"  -h  this help. \n"\
@@ -78,6 +81,10 @@ void parseCommand(int argc, char *argv[])
 				usage (EXIT_FAILURE);
 			}
 			index++;
+		}
+		else if( 0 == strcmp(argv[index], "-d") )
+		{
+			EnableDelimiters = true;
 		}
 		else if( 0 == strcmp(argv[index], "-q") )
 		{
@@ -367,15 +374,18 @@ void printList(Display *local_dpy, list_node_int** key_list, int new_key)
 		delete_node_str(&key_str, new_node);
 	}
 
-	while(delimiter[i]!=-1)
+	if(EnableDelimiters)
 	{
-		if(delimiter[i] == new_key)	// delimiter key
+		while(delimiter[i]!=-1)
 		{
-			clear_list_str(&key_str);
-			key_str_len = 0;
-			break;
+			if(delimiter[i] == new_key)	// delimiter key
+			{
+				clear_list_str(&key_str);
+				key_str_len = 0;
+				break;
+			}
+			i++;
 		}
-		i++;
 	}
 
 }
