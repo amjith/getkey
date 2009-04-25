@@ -28,15 +28,19 @@ void usage(const int exitCode)
 	fprintf (stderr, "Usage: %s [option]\n",PROG );
 	fprintf (stderr, "Options:\n");
 	fprintf (stderr,
-			"  -l  NUM. Number of keys to display. Default: 3\n"\
+			"  -l  <NUM>\n"\
+		    "      Number of keys to display. Default: 3\n"\
 			"      Set this to -1 for unlimited length. \n"\
-			"  -t  NUM. Number of seconds to display the OSD. Default: 0\n"
-			"      Set this number to 0 to stick the OSD always.\n"
-			"  -d  Enable delimiters. Delimiters are special keys that will clear the current keylist history.\n"
-		    "      Default: Enter, Esc, Space\n"
-			"  -q  NUM. Specify the key code for the quit key.\n"
+			"  -t  <NUM>\n"
+		    "      Number of seconds to display the OSD. Default: 0\n"\
+			"      Set this number to 0 to stick the OSD always.\n"\
+			"  -d  Enable delimiters. Delimiters are special keys that will clear the current keylist history.\n"\
+		    "      Default: Enter, Esc, Space\n"\
+			"  -q  <NUM>\n"\
+		    "      Specify the key code for the quit key.\n"\
+			"     (Don't use this unless you know the key code for your quit key)\n"\
 			"  -v  show version. \n"\
-			"  -h  this help. \n"\
+			"  -h  Display this help. \n"\
 			);
 	exit(exitCode);
 }
