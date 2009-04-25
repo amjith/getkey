@@ -3,15 +3,7 @@ Library Req:
 xosd library and devel packages.
 xtst devel packages. This is an extension package for X11 that has recording routines.
 
-Mandriva (64 bit):
-> urpmi lib64xosd2-devel lib64xosd2 lib64xtst-devel
-
-Mandriva (32 bit):
-> urpmi libxosd2-devel lib64xosd2 libxtst-devel
-
-Ubuntu:
-
-> apt-get install libxosd-devel libxtst-devel
+How to compile:
 
 Compilation:
 
@@ -24,7 +16,37 @@ Launch getkey
 
 The first key you press will be used as your quit key (I prefer Esc).
 
+Usage: getkey [option]
+Options:
+  -l  <NUM>
+	  Number of keys to display. Default: 3
+      Set this to -1 for unlimited length. 
+  -t  <NUM>
+	  Number of seconds to display the OSD. Default: 0
+      Set this number to 0 to stick the OSD always.
+  -d  Enable delimiters. Delimiters are special keys that will clear the current keylist history.
+      Default: Enter, Esc, Space
+  -q  <NUM>
+	  Specify the key code for the quit key (Don't use this unless you know the key code for your key)
+  -v  show version. 
+  -h  Display this help. 
+
+
+
+
 After that any key you press will be displayed on the top of the screen in the center. You can press your
 choice of quit key to exit the 'getkey' program.
+
+How to get xosd and xtst:
+Mandriva (64 bit):
+> urpmi lib64xosd2-devel lib64xosd2 lib64xtst-devel
+
+Mandriva (32 bit):
+> urpmi libxosd2-devel libxosd2 libxtst-devel
+
+Ubuntu:
+
+> apt-get install libxosd-devel libxtst-devel
+
 
 
