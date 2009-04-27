@@ -1,0 +1,66 @@
+-------------------------------------------------------
+What is getkey?
+-------------------------------------------------------
+'getkey' is a utility that can display the key that is currently being pressed in the keyboard.
+
+-------------------------------------------------------
+How to compile?
+-------------------------------------------------------
+Requirements:
+-------------
+The display is done using xosd, an osd display library.
+The record extension in X11 library (xtst) is used for key capture.
+
+How to get xosd and xtst:
+
+Mandriva (64 bit):
+> urpmi lib64xosd2-devel lib64xosd2 lib64xtst-devel
+
+Mandriva (32 bit):
+> urpmi libxosd2-devel libxosd2 libxtst-devel
+
+Ubuntu:
+> apt-get install libxosd-devel libxtst-devel
+
+Compilation:
+------------
+Run 'make'. It should create an executable called 'getkey'.
+
+-------------------------------------------------------
+How to use getkey? 
+-------------------------------------------------------
+Getting Help
+------------
+Launch it from the command line with the -h option to get help.
+> ./getkey -h
+Usage: getkey [option]
+Options:
+  -l  <NUM>
+	  Number of keys to display. 
+      Set this to -1 for unlimited length. Default: 3
+  -t  <NUM>
+	  Number of seconds to display the OSD.
+      Set this number to 0 to stick the OSD always. Default: 0
+  -d  Enable delimiters. Delimiters are special keys that will clear the current keylist history from display.
+      Default: Enter, Esc, Space
+  -q  <NUM>
+	  Specify the key code for the quit key
+	  (Don't use this unless you are absolutely sure about the key code)
+  -v  show version. 
+  -h  Display this help. 
+
+
+Running
+-------
+Launch getkey from command line with default options.
+> ./getkey
+
+The first key you press will be used as your quit key (I prefer Esc).
+
+After that any key you press will be displayed on the top of the screen in the center. You can press your
+choice of quit key to exit the 'getkey' program.
+
+
+
+
+
