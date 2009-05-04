@@ -24,7 +24,8 @@ Ubuntu:
 
 Compilation:
 ------------
-Run 'make'. It should create an executable called 'getkey'.
+Run './configure && make'. It should create an executable called 'getkey'.
+You can install it system wide by running 'make install'.
 
 -------------------------------------------------------
 How to use getkey? 
