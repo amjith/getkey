@@ -275,11 +275,16 @@ void display_osd(char *display_string)
 
 	xosd_hide(osd);
 	osd = xosd_create (1);
-	xosd_set_font(osd, "-adobe-courier-medium-r-normal--34-240-100-100-m-200-iso8859-1");
+	//xosd_set_font(osd, "-adobe-courier-medium-r-normal--34-240-100-100-m-200-iso8859-1");
+	//xosd_set_font(osd, "-adobe-helvetica-bold-r-normal-*-*-320-*-*-p-*-*");
+	xosd_set_font(osd, "-*-helvetica-bold-r-*-*-*-320-*-*-*-*-*");
+	//xosd_set_font(osd, "-adobe-helvetica-bold-r-normal-*-*-320-*-*-p-*-iso8859-1");
 	xosd_set_colour(osd, "LawnGreen");
 	xosd_set_timeout(osd, XosdTimeout);
 	xosd_set_shadow_offset(osd, 1);
 	xosd_set_pos(osd,XOSD_top);
+	xosd_set_outline_offset(osd, 2);
+	xosd_set_outline_colour(osd, "black");
 	xosd_set_align(osd,XOSD_center);
 	xosd_display (osd, 0, XOSD_string, display_string);
 }

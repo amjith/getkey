@@ -13,11 +13,11 @@ AC_PROG_CC
 # Checks for libraries.
 # FIXME: Replace `main' with a function in `-lX11':
 AC_CHECK_LIB([X11], [XOpenDisplay], [],[
-			  echo "X11 library is required for this program" 
+			  echo "X11 library is missing. Install xorg-dev libraries." 
 			  exit -1])
 # FIXME: Replace `main' with a function in `-lXtst':
 AC_CHECK_LIB([Xtst], [XRecordCreateContext], [],[
-			  echo "Xtst devel library is missing. Xtst is required for this program" 
+			  echo "Xtst devel library is missing. Xtst is required for this program." 
 			  exit -1])
 # FIXME: Replace `main' with a function in `-lxosd':
 AC_CHECK_LIB([xosd], [xosd_create], [],[
